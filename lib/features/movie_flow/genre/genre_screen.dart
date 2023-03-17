@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:movie_recommendation_app/core/constants.dart';
 import 'package:movie_recommendation_app/core/widgets/primary_button.dart';
-import 'package:movie_recommendation_app/features/genre/genre.dart';
-import 'package:movie_recommendation_app/features/genre/list_card.dart';
+import 'package:movie_recommendation_app/features/movie_flow/genre/genre.dart';
+import 'package:movie_recommendation_app/features/movie_flow/genre/list_card.dart';
 
 class GenreScreen extends StatefulWidget {
   const GenreScreen({

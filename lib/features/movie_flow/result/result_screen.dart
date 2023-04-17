@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movie_recommendation_app/core/constants.dart';
 import 'package:movie_recommendation_app/core/widgets/primary_button.dart';
-import 'package:movie_recommendation_app/features/movie_flow/genre/genre.dart';
+import 'package:movie_recommendation_app/features/movie_flow/movie_flow_controller.dart';
 import 'package:movie_recommendation_app/features/movie_flow/result/movie.dart';
 
-class ResultScreen extends StatelessWidget {
+class ResultScreen extends ConsumerWidget {
   const ResultScreen({Key? key}) : super(key: key);
 
   static route({bool fullScreenDialog = true}) => MaterialPageRoute(
@@ -13,22 +14,9 @@ class ResultScreen extends StatelessWidget {
 
   final double movieHeight = 150;
 
-  final movie = const Movie(
-    title: 'M3GAN',
-    overview:
-        'Un ingeniero en robótica de una empresa de juguetes construye una muñeca realista que comienza a cobrar vida propia',
-    voteAverage: 7.4,
-    genres: [
-      Genre(name: 'Horror'),
-      Genre(name: 'Comedy'),
-    ],
-    releaseDate: '29-12-2022',
-    backdropPath: '',
-    posterPath: '',
-  );
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final movieFlowController = ref.watch(movieFlowControllerProvider);
     return Scaffold(
       appBar: AppBar(),
       body: Column(
@@ -44,7 +32,7 @@ class ResultScreen extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       bottom: -(movieHeight / 2),
                       child: MovieImageDetails(
-                        movie: movie,
+                        movie: movieFlowController.movie,
                         movieHeight: movieHeight,
                       ),
                     ),
@@ -56,7 +44,7 @@ class ResultScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Text(
-                    movie.overview,
+                    movieFlowController.movie.overview,
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ),

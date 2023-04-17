@@ -2,6 +2,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:movie_recommendation_app/features/movie_flow/genre/genre.dart';
 
+@immutable
 class Movie {
   final String title;
   final String overview;

@@ -1,53 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movie_recommendation_app/core/constants.dart';
 import 'package:movie_recommendation_app/core/widgets/primary_button.dart';
-import 'package:movie_recommendation_app/features/movie_flow/genre/genre.dart';
 import 'package:movie_recommendation_app/features/movie_flow/genre/list_card.dart';
+import 'package:movie_recommendation_app/features/movie_flow/movie_flow_controller.dart';
 
-class GenreScreen extends StatefulWidget {
+class GenreScreen extends ConsumerWidget {
   const GenreScreen({
     Key? key,
-    required this.nextPage,
-    required this.previousPage,
   }) : super(key: key);
-  final VoidCallback nextPage;
-  final VoidCallback previousPage;
-  @override
-  State<GenreScreen> createState() => _GenreScreenState();
-}
-
-class _GenreScreenState extends State<GenreScreen> {
-  List<Genre> genres = const [
-    Genre(name: 'Action'),
-    Genre(name: 'Comedy'),
-    Genre(name: 'Horror'),
-    Genre(name: 'Anime'),
-    Genre(name: 'Drama'),
-    Genre(name: 'Family'),
-    Genre(name: 'Romance'),
-  ];
-
-  void toggleSelected(Genre genre) {
-    List<Genre> updatedGenres = genres.map((oldGenre) {
-      if (oldGenre == genre) {
-        return oldGenre.toggleSelected();
-      } else {
-        return oldGenre;
-      }
-    }).toList();
-
-    setState(() {
-      genres = updatedGenres;
-    });
-  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final movieFlowController = ref.watch(movieFlowControllerProvider);
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
-          onPressed: widget.previousPage,
+          onPressed: () =>
+              ref.read(movieFlowControllerProvider.notifier).previousPage(),
         ),
       ),
       body: Center(
@@ -64,19 +35,22 @@ class _GenreScreenState extends State<GenreScreen> {
                   vertical: kListItemSpacing,
                 ),
                 itemBuilder: (context, index) {
-                  final genre = genres[index];
+                  final genre = movieFlowController.genres[index];
                   return ListCard(
-                    onTap: () => toggleSelected(genre),
+                    onTap: () => ref
+                        .read(movieFlowControllerProvider.notifier)
+                        .toggleSelected(genre),
                     genre: genre,
                   );
                 },
                 separatorBuilder: (_, __) =>
                     const SizedBox(height: kListItemSpacing),
-                itemCount: genres.length,
+                itemCount: movieFlowController.genres.length,
               ),
             ),
             PrimaryButton(
-              onPressed: widget.nextPage,
+              onPressed: () =>
+                  ref.read(movieFlowControllerProvider.notifier).nextPage(),
               text: 'Continue',
             ),
             const SizedBox(height: kMediumSpacing),

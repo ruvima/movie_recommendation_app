@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movie_recommendation_app/features/movie_flow/movie_flow.dart';
@@ -8,6 +9,12 @@ void main() {
     const ProviderScope(child: App()),
   );
 }
+
+final dioProvider = Provider<Dio>(
+  (ref) => Dio(
+    BaseOptions(baseUrl: 'https://api.themoviedb.org/3/'),
+  ),
+);
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);

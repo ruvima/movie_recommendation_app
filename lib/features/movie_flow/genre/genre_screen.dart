@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movie_recommendation_app/core/constants.dart';
+import 'package:movie_recommendation_app/core/failure.dart';
+import 'package:movie_recommendation_app/core/widgets/failure_screen.dart';
 import 'package:movie_recommendation_app/core/widgets/primary_button.dart';
 import 'package:movie_recommendation_app/features/movie_flow/genre/list_card.dart';
 import 'package:movie_recommendation_app/features/movie_flow/movie_flow_controller.dart';
@@ -49,9 +51,13 @@ class GenreScreen extends ConsumerWidget {
                         itemCount: genres.length,
                       );
                     },
-                    error: (_, __) => const Center(
-                      child: Text('Somenthing went wrong on our end'),
-                    ),
+                    error: (e, _) {
+                      if (e is Failure) {
+                        return FailureBody(message: e.message);
+                      }
+                      return const FailureBody(
+                          message: 'Something went wrong on our end');
+                    },
                     loading: () => const Center(
                       child: CircularProgressIndicator(),
                     ),

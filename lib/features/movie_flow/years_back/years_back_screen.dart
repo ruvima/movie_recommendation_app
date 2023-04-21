@@ -14,6 +14,13 @@ class YearsBackScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final movieFlowController = ref.watch(movieFlowControllerProvider);
+
+    Future<void> getRecommendedMovie() async {
+      await ref
+          .read(movieFlowControllerProvider.notifier)
+          .getRecommendedMovie();
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
@@ -60,10 +67,15 @@ class YearsBackScreen extends ConsumerWidget {
             ),
             const Spacer(),
             PrimaryButton(
-                onPressed: () => Navigator.push(
-                      context,
-                      ResultScreen.route(),
-                    ),
+                onPressed: () async {
+                  getRecommendedMovie();
+                  Navigator.push(
+                    context,
+                    ResultScreen.route(),
+                  );
+                },
+                isLoading: ref.watch(movieFlowControllerProvider).movie
+                    is AsyncLoading,
                 text: 'Amazing'),
             const SizedBox(height: kMediumSpacing),
           ],

@@ -13,7 +13,6 @@ class GenreScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final movieFlowController = ref.watch(movieFlowControllerProvider);
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
@@ -30,23 +29,33 @@ class GenreScreen extends ConsumerWidget {
               textAlign: TextAlign.center,
             ),
             Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(
-                  vertical: kListItemSpacing,
-                ),
-                itemBuilder: (context, index) {
-                  final genre = movieFlowController.genres[index];
-                  return ListCard(
-                    onTap: () => ref
-                        .read(movieFlowControllerProvider.notifier)
-                        .toggleSelected(genre),
-                    genre: genre,
-                  );
-                },
-                separatorBuilder: (_, __) =>
-                    const SizedBox(height: kListItemSpacing),
-                itemCount: movieFlowController.genres.length,
-              ),
+              child: ref.watch(movieFlowControllerProvider).genres.when(
+                    data: (genres) {
+                      return ListView.separated(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: kListItemSpacing,
+                        ),
+                        itemBuilder: (context, index) {
+                          final genre = genres[index];
+                          return ListCard(
+                            onTap: () => ref
+                                .read(movieFlowControllerProvider.notifier)
+                                .toggleSelected(genre),
+                            genre: genre,
+                          );
+                        },
+                        separatorBuilder: (_, __) =>
+                            const SizedBox(height: kListItemSpacing),
+                        itemCount: genres.length,
+                      );
+                    },
+                    error: (_, __) => const Center(
+                      child: Text('Somenthing went wrong on our end'),
+                    ),
+                    loading: () => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
             ),
             PrimaryButton(
               onPressed: () =>

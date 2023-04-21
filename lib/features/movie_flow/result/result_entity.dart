@@ -25,7 +25,7 @@ class MovieEntity {
       title: map['title'] ?? '',
       overview: map['overview'] ?? '',
       voteAverage: map['vote_average'] ?? 0,
-      genreIds: map['genre_ids'] ?? [],
+      genreIds: List.from(map['genre_ids']),
       releaseDate: map['release_date'] ?? '',
       backdropPath: map['backdrop_path'] ?? '',
       posterPath: map['poster_path'] ?? '',
